@@ -4,25 +4,34 @@ $id = '';
 if( isset( $_GET['id'])) {
     $id = $_GET['id']; 
 } 
+$msg = '';
+$code = '';
 $cek = mysqli_query($connection,"select * from user where id='$id'");
+$cek2 = mysqli_query($connection,"select * from user");
 // Evaluates as true because $var is set
 if (!empty($id))
 {
 	$query = mysqli_query($connection,"select * from user where id='$id'");
+	if (mysqli_num_rows($cek) > 0) {
+		$code = 200;
+		$msg = "Show user data success";
+		}else{
+			$code = 204;
+			$msg = "User data not found";	
+		}
 }else
 {
 	$query = mysqli_query($connection,"select * from user");
+	if (mysqli_num_rows($cek2) > 0) {
+		$code = 200;
+		$msg = "Show user data success";
+		}else{
+			$code = 204;
+			$msg = "User data not found";	
+		}
 };
-$msg = '';
-$code = '';
+
 //untuk menjalankan perinta sql
-if (mysqli_num_rows($cek) > 0) {
-$code = 200;
-$msg = "Show user data success";
-}else{
-	$code = 204;
-	$msg = "User data not found";	
-}
 	# buat array
 	$responsistem = array();
 	$responsistem["success"] = true;
@@ -35,6 +44,8 @@ $msg = "Show user data success";
 				$data['id'] = $row["id"];
 				$data['username'] = $row["username"];
 				$data['password'] = $row["password"];
+				$data['level'] = $row["level"];
+				$data['fullname'] = $row["fullname"];
 				array_push($responsistem["data"], $data);
 			}
 	echo json_encode($responsistem);
